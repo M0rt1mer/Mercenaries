@@ -1,0 +1,25 @@
+entity.Mercenary.name=Mercenary
+
+professions.name.lumberjack=Lumberjack
+professions.desc.lumberjack=Chops trees down
+professions.req.lumberjack=any Axe
+
+professions.name.empty=No job
+professions.desc.empty=Has no profession assigned
+professions.req.empty=whatever
+
+professions.name.guard=Guard
+professions.desc.guard=Guards your territory
+professions.req.guard=any Sword
+
+professions.name.farmer=Farmer
+professions.desc.farmer=Cares for crops
+professions.req.farmer=any Hoe
+
+order.MercenaryOrder=No order
+order.OrderWork=Work
+order.OrderFollow=Follow
+work.time.0=morning
+work.time.1=afternoon
+work.time.2=night
+item.goldCoin.name=Gold coin
