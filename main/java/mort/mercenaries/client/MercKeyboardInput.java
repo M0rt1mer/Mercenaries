@@ -37,7 +37,7 @@ public class MercKeyboardInput{
     public void onKeyInput(InputEvent.KeyInputEvent event) {
     		for( int i = 0; i<commandKeys.length;i++){
     			if(commandKeys[i].isPressed())
-    				Mercenaries.merc.issueCommand(null, i, Minecraft.getMinecraft().thePlayer );
+    				Mercenaries.merc.issueCommand(null, i, Minecraft.getMinecraft().player );
     		}
     	
     }

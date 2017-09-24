@@ -4,10 +4,8 @@
  */
 package mort.mercenaries.client;
 
-import mort.mercenaries.EntityMercenary;
 import mort.mercenaries.Reference;
-import mort.mercenaries.api.MercenaryProfession;
-import mort.mercenaries.api.ProfessionManager;
+import mort.mercenaries.common.EntityMercenary;
 import mort.mercenaries.inventory.ContainerMercenary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -56,8 +54,8 @@ public class GUIContainerMercenary extends GuiContainer{
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		EntityMercenary merc = ((ContainerMercenary)this.inventorySlots).merc;
 		if( merc.mercname != null )
-			this.fontRendererObj.drawString(merc.mercname, 8, 8, 4210752);
-		MercenaryProfession prof = merc.prof;
+			this.fontRenderer.drawString(merc.mercname, 8, 8, 4210752);
+		/*MercenaryProfession prof = merc.prof;
 		if( prof == null ){
 			prof = ProfessionManager.instance.noProf;
 		}
@@ -69,6 +67,7 @@ public class GUIContainerMercenary extends GuiContainer{
 		this.fontRendererObj.drawString(prof.getName(), 108, 108, 4210752);
 		if( this.isPointInRegion(44, 108, 16, 16, par1, par2) ) //func_146978_c - isPointInRegion
 			this.drawCreativeTabHoveringText( prof.getName() + "\n" + prof.getDescription(), par1 - (this.width - this.xSize) / 2, par2 - (this.height - this.ySize) / 2);
+			*/
 	}
 
 	@Override

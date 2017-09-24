@@ -1,9 +1,6 @@
 package mort.mercenaries.client;
 
 import mort.mercenaries.Reference;
-import mort.mercenaries.api.MercenaryProfession;
-import mort.mercenaries.api.ProfessionManager;
-import mort.mercenaries.inventory.ContainerMercenary;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -50,13 +47,13 @@ public class GuiScreenProfessions extends GuiScreen{
 		super.drawScreen(mouseX, mouseY, par3);
 		//other stuff
 		int y = yOffset;
-		for( MercenaryProfession prof : ProfessionManager.instance.professions ){
+		/*for( MercenaryProfession prof : ProfessionManager.instance.professions ){
 			drawProfessionLine( xOffset+10, y, prof);
 			y += 32;
 			if( mouseX >= xOffset+10 && mouseX <= xOffset+26 && mouseY >= y && mouseY<y+16 )
 				this.drawCreativeTabHoveringText( prof.getName() + "\n" + prof.getDescription(), mouseX - (this.width - this.xSize) / 2, mouseY - (this.height - this.ySize) / 2);
 			
-		}
+		}*/
 	}
 
 	@Override
@@ -65,7 +62,7 @@ public class GuiScreenProfessions extends GuiScreen{
 			FMLClientHandler.instance().showGuiScreen( previous );
 	}
 
-	protected void drawProfessionLine( int x, int y, MercenaryProfession prof ){
+	/*protected void drawProfessionLine( int x, int y, MercenaryProfession prof ){
 		boolean enabled = previous==null || prof.isAvaible( ((ContainerMercenary)previous.inventorySlots).merc );
 		this.mc.getTextureManager().bindTexture( Reference.GUI_PROFLIST );
 
@@ -75,7 +72,7 @@ public class GuiScreenProfessions extends GuiScreen{
 		this.drawTexturedModalRect( x, y + 8, prof.icn, 16, 16);
 		this.fontRendererObj.drawStringWithShadow( prof.getName(), x + 20, y + 16, enabled?colorEnabled:colorDisabled );
 		
-	}
+	}*/
 
 
 }

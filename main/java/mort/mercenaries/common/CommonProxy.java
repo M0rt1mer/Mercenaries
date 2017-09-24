@@ -18,14 +18,6 @@ public class CommonProxy implements IGuiHandler {
 
     ////--------------------------------------------------------------------------- Mod initialization
 
-    public void registerEntityRender(){
-
-    }
-
-    public void registerItemBlockRender(){
-
-    }
-
     ///------------------------------------------------------------------ Ingame
     /**
      * @param x abducted to represent entity ID

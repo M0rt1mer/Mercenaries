@@ -18,6 +18,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 
+import java.util.Collections;
+
 /**
  * Created by Martin on 15.06.2016.
  */
@@ -53,12 +55,12 @@ public class EntityMercenary extends EntityLivingBase {
     
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -68,7 +70,7 @@ public class EntityMercenary extends EntityLivingBase {
 
     @Override
     public EnumHandSide getPrimaryHand() {
-        return null;
+        return EnumHandSide.RIGHT;
     }
 
     public void entityInit() {

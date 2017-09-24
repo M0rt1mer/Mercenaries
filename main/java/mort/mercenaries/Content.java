@@ -26,9 +26,8 @@ import java.util.List;
 public abstract class Content {
 
 	//public static TextureMap textureMap;
-    @GameRegistry.ObjectHolder( "money" )
+    @GameRegistry.ObjectHolder( Reference.modId + ":money" )
 	public static Item itemMoney;
-
 
 	public static IForgeRegistry<RoomTemplate> roomRegistry;
 	public static IForgeRegistry<AiActionTemplate> actionRegistry;
@@ -37,7 +36,7 @@ public abstract class Content {
     public static IFurniture furnChair;
     //@GameRegistry.ObjectHolder( "bed" )
     public static IFurniture furnBed;
-    @GameRegistry.ObjectHolder( "roomHouse" )
+    @GameRegistry.ObjectHolder( Reference.modId + ":roomHouse" )
     public static RoomTemplate house;
 
     public static MercenaryNameRegistry nameRegistry;
@@ -49,20 +48,20 @@ public abstract class Content {
         nameRegistry = new MercenaryNameRegistry();
 	}
 
-
 	@SubscribeEvent
 	public static void event_createBlocks( RegistryEvent.Register<Block> events ){}
 
     @SubscribeEvent
     public static void event_createItems( RegistryEvent.Register<Item> events ){
         IForgeRegistry<Item> registry = events.getRegistry();
-        createItem( registry, new Item(), "goldCoin" );
+        createItem( registry, new Item(), "money" );
     }
 
     private static void createItem( IForgeRegistry<Item> registry, Item item, String name ){
-        item.setRegistryName( new ResourceLocation( Reference.modId, name ) ).setUnlocalizedName(name).setCreativeTab( CreativeTabs.MISC );
+        registry.register( item.setRegistryName( new ResourceLocation( Reference.modId, name ) ).setUnlocalizedName(name).setCreativeTab( CreativeTabs.MISC ) );
     }
 
+    @SubscribeEvent
     public static void event_createRooms( RegistryEvent.Register<RoomTemplate> rooms ){
 
 
@@ -75,6 +74,7 @@ public abstract class Content {
         house = new RoomTemplate(furn);
     }
 
+    @SubscribeEvent
     public static void event_createAiActions(RegistryEvent.Register<AiActionTemplate> event ){
         IForgeRegistry<AiActionTemplate> registry = event.getRegistry();
         registry.register( new WorldPlaceAction().setRegistryName("place_block") );

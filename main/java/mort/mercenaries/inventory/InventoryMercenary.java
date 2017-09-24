@@ -10,6 +10,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -31,10 +32,10 @@ public class InventoryMercenary implements IInventory{
     /**
      * 4 tools (1-4) and 12 storage slots
      */
-    public ItemStack[] mainInventory = new ItemStack[4 * 4];
+    public NonNullList<ItemStack> mainInventory = NonNullList.<ItemStack>withSize(4*4, ItemStack.EMPTY);
     public static final int invSize = 16;
     /** An array of 4 item stacks containing the currently worn armor pieces. */
-    public ItemStack[] armorInventory = new ItemStack[4];
+    public NonNullList<ItemStack> armorInventory = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
     
     
     public int activeTool = 0;
@@ -50,31 +51,30 @@ public class InventoryMercenary implements IInventory{
 
     @Override
     public ItemStack decrStackSize(int slot, int count) {
-	ItemStack[] inv = this.mainInventory;
+	    NonNullList<ItemStack> inv = this.mainInventory;
 
-        if (slot >= this.mainInventory.length)
+        if (slot >= this.mainInventory.size())
         {
             inv = this.armorInventory;
-            slot -= this.mainInventory.length;
+            slot -= this.mainInventory.size();
         }
 
-        if (inv[slot] != null)
-        {
+        if (!inv.get(slot).isEmpty()) {
             ItemStack var4;
 
-            if (inv[slot].getCount() <= count)
+            if (inv.get(slot).getCount() <= count)
             {
-                var4 = inv[slot];
-                inv[slot] = null;
+                var4 = inv.get(slot);
+                inv.set(slot,ItemStack.EMPTY);
                 return var4;
             }
             else
             {
-                var4 = inv[slot].splitStack(slot);
+                var4 = inv.get(slot).splitStack(slot);
 
-                if (inv[slot].getCount() == 0)
+                if (inv.get(slot).getCount() == 0)
                 {
-                    inv[slot] = null;
+                    inv.set(slot,ItemStack.EMPTY);
                 }
 
                 return var4;
@@ -82,7 +82,7 @@ public class InventoryMercenary implements IInventory{
         }
         else
         {
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 
@@ -98,69 +98,29 @@ public class InventoryMercenary implements IInventory{
 
     @Override
     public ItemStack getStackInSlot(int slot) {
-	if( slot>=mainInventory.length )
-	    return armorInventory[slot-mainInventory.length];
+	if( slot>=mainInventory.size() )
+	    return armorInventory.get(slot-mainInventory.size());
 	else
-	    return mainInventory[slot];
+	    return mainInventory.get(slot);
     }
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack var2) {
-        if (slot >= mainInventory.length)
-            armorInventory[slot - mainInventory.length] = var2;
+        if (slot >= mainInventory.size())
+            armorInventory.set(slot - mainInventory.size(), var2);
         else
-            mainInventory[slot] = var2;
+            mainInventory.set(slot, var2);
     }
 
     public ItemStack getActiveItem(){
-	return mainInventory[activeTool];
+	return mainInventory.get(activeTool);
     }
-    
-    /**
-     * Tries to add itemStack to inventory, modifying it's size accordingly.
-     */
-    public void addItemStackToInventory(ItemStack stack)
-    {
-	if( stack.isItemDamaged() || !stack.isStackable() ){
-	    for( int i = 0; i<invSize; i++ ){
-		if( mainInventory[i] == null ){
-		    mainInventory[i] = stack.splitStack(stack.getCount());
-		    return;
-		}
-	    }
-	    return;
-	}
-	else{ //stackable
-	    int free = -1;
-	    for( int i = 0; i<invSize && stack.getCount() > 0; i++ ){
-		if( mainInventory[i]==null ){
-		    free = i;
-		}
-		else if( mainInventory[i].isItemEqual(stack) && ItemStack.areItemStackTagsEqual(mainInventory[i], stack) ){
-		    int transfer = Math.min( mainInventory[i].getItem().getItemStackLimit(mainInventory[i]) - mainInventory[i].getCount(), stack.getCount() );
-		    mainInventory[i].setCount( mainInventory[i].getCount() + transfer);
-		    stack.setCount( stack.getCount() - transfer );
-		}
-	    }
-	    if( stack.getCount() > 0){
-		if( free != -1 ){
-		    mainInventory[free] = stack.splitStack(stack.getCount());
-    		}
-		else
-		    return;
-	    }
-	    return;
-	}
-	
-    }
-	
-	
-    
-    
+
+
     public void readFromNBT(NBTTagList par1NBTTagList)
     {
-        this.mainInventory = new ItemStack[36];
-        this.armorInventory = new ItemStack[4];
+        mainInventory.clear();
+        armorInventory.clear();
 
         for (int var2 = 0; var2 < par1NBTTagList.tagCount(); ++var2)
         {
@@ -170,14 +130,14 @@ public class InventoryMercenary implements IInventory{
 
             if (var5 != null)
             {
-                if (var4 >= 0 && var4 < this.mainInventory.length)
+                if (var4 >= 0 && var4 < this.mainInventory.size())
                 {
-                    this.mainInventory[var4] = var5;
+                    this.mainInventory.set(var4, var5);
                 }
 
-                if (var4 >= 100 && var4 < this.armorInventory.length + 100)
+                if (var4 >= 100 && var4 < this.armorInventory.size() + 100)
                 {
-                    this.armorInventory[var4 - 100] = var5;
+                    this.armorInventory.set(var4 - 100, var5);
                 }
             }
         }
@@ -188,24 +148,24 @@ public class InventoryMercenary implements IInventory{
         int var2;
         NBTTagCompound var3;
 
-        for (var2 = 0; var2 < this.mainInventory.length; ++var2)
+        for (var2 = 0; var2 < this.mainInventory.size(); ++var2)
         {
-            if (this.mainInventory[var2] != null)
+            if (this.mainInventory.get(var2).isEmpty() )
             {
                 var3 = new NBTTagCompound();
                 var3.setByte("Slot", (byte)var2);
-                this.mainInventory[var2].writeToNBT(var3);
+                this.mainInventory.get(var2).writeToNBT(var3);
                 par1NBTTagList.appendTag(var3);
             }
         }
 
-        for (var2 = 0; var2 < this.armorInventory.length; ++var2)
+        for (var2 = 0; var2 < this.armorInventory.size(); ++var2)
         {
-            if (this.armorInventory[var2] != null)
+            if ( this.armorInventory.get(var2).isEmpty() )
             {
                 var3 = new NBTTagCompound();
                 var3.setByte("Slot", (byte)(var2 + 100));
-                this.armorInventory[var2].writeToNBT(var3);
+                this.armorInventory.get(var2).writeToNBT(var3);
                 par1NBTTagList.appendTag(var3);
             }
         }
@@ -215,10 +175,10 @@ public class InventoryMercenary implements IInventory{
 
     @Override
     public ItemStack removeStackFromSlot(int slot) {
-        if (slot >= this.mainInventory.length) {
-            slot -= this.mainInventory.length;
-            ItemStack stack = armorInventory[slot];
-            armorInventory[slot] = null;
+        if (slot >= this.mainInventory.size()) {
+            slot -= this.mainInventory.size();
+            ItemStack stack = armorInventory.get(slot);
+            armorInventory.set(slot, null);
             return stack;
         }
         return null;

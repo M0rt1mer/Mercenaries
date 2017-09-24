@@ -1,9 +1,9 @@
 
 package mort.mercenaries;
 
+import mort.mercenaries.client.MercKeyboardInput;
 import mort.mercenaries.common.CommonProxy;
 import mort.mercenaries.common.EntityMercenary;
-import mort.mercenaries.client.MercKeyboardInput;
 import mort.mercenaries.network.MessageCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static mort.mercenaries.common.CommonProxy.smw;
 
@@ -34,8 +33,8 @@ public class Mercenaries {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(merc, proxy);
 		MinecraftForge.EVENT_BUS.register(new MercEventHandler());
+		MinecraftForge.EVENT_BUS.register(proxy);
 		smw.registerMessage(MessageCommand.class, MessageCommand.class, 0, Side.SERVER);
-		proxy.registerEntityRender();
 		Content.preInit();
 		new MercKeyboardInput();
 	}
@@ -43,7 +42,6 @@ public class Mercenaries {
 	@Mod.EventHandler
 	public void Init( FMLInitializationEvent event ){
         Content.init();
-		proxy.registerItemBlockRender();
 	}
 
 	@Mod.EventHandler
