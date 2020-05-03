@@ -2,8 +2,10 @@ package mort.mercenaries.common.rooms;
 
 import com.google.common.collect.Multimap;
 import mort.mercenaries.block.IRoomBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -16,10 +18,14 @@ public class Room {
 
 	public final World world;
 	public final BlockPos pos;
+	public final BlockPos[] interiorBlocks;
+	public final BlockPos[] boundaryBlocks;
 
-	public Room(World world, BlockPos pos) {
+	public Room(World world, BlockPos pos, BlockPos[] interiorBlocks, BlockPos[] boundaryBlocks) {
 		this.world = world;
 		this.pos = pos;
+		this.interiorBlocks = interiorBlocks;
+		this.boundaryBlocks = boundaryBlocks;
 	}
 
 	public int[] furnitureCouters;
@@ -35,13 +41,33 @@ public class Room {
 		}
 	}
 
-	public static Room TryCreateRoom(BlockState sourceBlock, BlockPos pos, World world)
+	public void DebugDescription()
+	{
+		System.out.println( "Room:" );
+		System.out.println( String.format("Volume: %d", interiorBlocks.length) );
+		System.out.println( String.format("Surface: %d", boundaryBlocks.length) );
+		Map<Block,Integer> blockCounts = new HashMap<>();
+		for(BlockPos blockPos : boundaryBlocks)
+		{
+			Block blk = world.getBlockState(blockPos).getBlock();
+			if(!blockCounts.containsKey(blk))
+				blockCounts.put(blk, 1);
+			else
+				blockCounts.put( blk, blockCounts.get(blk) + 1 );
+		}
+		for(Map.Entry<Block,Integer> entry : blockCounts.entrySet())
+		{
+			System.out.println( String.format("# %s: %d", entry.getKey(), entry.getValue()) );
+		}
+	}
+
+	public static Room TryCreateRoom(BlockState sourceBlock, BlockPos sourcePos, World world)
 	{
 		if( !(sourceBlock.getBlock() instanceof IRoomBlock) )
 			return null;
 
 		IRoomBlock roomBlock = (IRoomBlock)sourceBlock.getBlock();
-		BlockPos startingPos = pos.offset(roomBlock.GetDefaultDirection());
+		BlockPos startingPos = sourcePos.offset(roomBlock.GetDefaultDirection());
 		if(!world.isAirBlock(startingPos))
 			return null;
 
@@ -51,19 +77,18 @@ public class Room {
 
 		Queue<BlockPos> open = new LinkedList<>();
 		open.add(startingPos);
-		closed.add(pos);
+		closed.add(sourcePos);
 
-		int cnt = 0;
 		final int cntLimit = 100;
 
-		while(!open.isEmpty() && cnt < cntLimit)
+		while(!open.isEmpty() && closed.size() < cntLimit)
 		{
 			BlockPos current = open.poll();
 			closed.add(current);
 
-			if(!world.isAirBlock(pos))
+			if(!world.isAirBlock(current))
 			{
-				barrierBlocks.add(pos);
+				barrierBlocks.add(current);
 				continue;
 			}
 			insideBlock.add(current);
@@ -74,6 +99,11 @@ public class Room {
 				if(!closed.contains(newPos))
 					open.add(newPos);
 			}
+		}
+
+		if(open.isEmpty())
+		{
+			return new Room( world, sourcePos, insideBlock.toArray(new BlockPos[0]), barrierBlocks.toArray(new BlockPos[0]) );
 		}
 
 		return null;
