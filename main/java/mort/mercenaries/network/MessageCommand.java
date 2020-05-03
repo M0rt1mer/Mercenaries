@@ -1,50 +1,39 @@
 package mort.mercenaries.network;
 
-import io.netty.buffer.ByteBuf;
 import mort.mercenaries.common.EntityMercenary;
 import mort.mercenaries.Mercenaries;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-/**
- *
- * @author Martin
- */
-public class MessageCommand implements IMessage, IMessageHandler<MessageCommand, IMessage> {
+import java.util.function.Supplier;
 
-	
-	private int merc;
-	private int command;
-	private int orderer;
-	
-	public MessageCommand(){} //empty contructor for MessageHandler instance
-	
-    public MessageCommand(EntityMercenary merc, int command, EntityPlayer orderer){
+public class MessageCommand {
+
+	private final int merc;
+	private final int command;
+
+	public MessageCommand(EntityMercenary merc, int command){
     	this.merc = merc.getEntityId();
     	this.command = command;
-    	this.orderer = orderer.getEntityId();
     }
 
-	@Override
-	public IMessage onMessage(MessageCommand message, MessageContext ctx) {
-		EntityPlayer entityPlayer = ctx.getServerHandler().player;
-		EntityMercenary mercObj = (EntityMercenary) entityPlayer.getEntityWorld().getEntityByID(merc);
-		Mercenaries.merc.issueCommand(mercObj, message.command, entityPlayer);
-		return null;
-	}
-
-	@Override
-	public void fromBytes(ByteBuf buf) {
+	public MessageCommand(PacketBuffer buf) {
 		merc = buf.readInt();
 		command = buf.readInt();
 	}
 
-	@Override
-	public void toBytes(ByteBuf buf) {
+	public void onMessage( Supplier<NetworkEvent.Context> ctx) {
+		ctx.get().enqueueWork( () -> {
+			PlayerEntity entityPlayer = ctx.get().getSender();
+			EntityMercenary mercObj = (EntityMercenary) entityPlayer.getEntityWorld().getEntityByID(merc);
+			Mercenaries.merc.issueCommand(mercObj, command, entityPlayer);
+		});
+	}
+
+	public void toBytes(PacketBuffer buf) {
 		buf.writeInt( merc );
 		buf.writeInt( command );
 	}
-    
+
 }

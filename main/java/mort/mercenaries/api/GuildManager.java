@@ -1,42 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mort.mercenaries.api;
 
-import mort.mercenaries.EntityMercenaryOld;
-import mort.mercenaries.Guild;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ReportedException;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-
-/**
- * Save system: all guild data is saved in players customData tag
- * @author Martin
- */
+/*
 public class GuildManager {
     
     private HashMap<Integer,Guild> guildMap;
     
-    private HashMap<EntityPlayer,Guild> playerMap;
+    private HashMap<PlayerEntity,Guild> playerMap;
     
     public GuildManager(){
 	guildMap = new HashMap<Integer, Guild>();
-	playerMap = new HashMap<EntityPlayer, Guild>();
+	playerMap = new HashMap<PlayerEntity, Guild>();
     }
     
     public Guild getGuild( int id ){
@@ -47,19 +20,19 @@ public class GuildManager {
 		return gld;
     }
     
-    public Guild getGuild( EntityPlayer plr ){
+    public Guild getGuild( PlayerEntity plr ){
     	return playerMap.get(plr);
     }
     
     /**
      * Finds the guild for given entity
      * @return guild for ENtityMercenary or EntityPlayer, null otherwise
-     */
-    public Guild getGuild( EntityLivingBase ent ){
-		if( ent instanceof EntityPlayer )
-		    return playerMap.get((EntityPlayer)ent);
-		if( ent instanceof EntityMercenaryOld)
-		    return ((EntityMercenaryOld)ent).getGuild();
+     *//*
+    public Guild getGuild( LivingEntity ent ){
+		if( ent instanceof PlayerEntity )
+		    return playerMap.get((PlayerEntity)ent);
+		if( ent instanceof EntityMercenary)
+		    return ((EntityMercenary)ent).getGuild();
 		return null;
     }
     
@@ -135,7 +108,7 @@ public class GuildManager {
     
     /**
      * Checks for obsolete player entries and deletes them. Obsole entry is such an entry, that doesn't have player file
-     */
+     *//*
     public void purge( WorldServer wld ){
 	HashSet<String> names = new HashSet<String>(  Arrays.asList( wld.getSaveHandler().getPlayerNBTManager().getAvailablePlayerDat() ) );
 	for( Guild gld : guildMap.values() ){
@@ -146,3 +119,4 @@ public class GuildManager {
     }
     
 }
+*/

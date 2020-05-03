@@ -1,9 +1,8 @@
 package mort.mercenaries.newAI.decider;
 
 import mort.mercenaries.newAI.ThreePartAI;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
 
 /**
@@ -12,16 +11,15 @@ import net.minecraft.util.math.AxisAlignedBB;
 public class OrderFollowNew extends MercenaryOrderNew {
 
     //private int followId;
-    private EntityLivingBase followEntity;
+    private LivingEntity followEntity;
 
-
-    public OrderFollowNew(ThreePartAI ai, EntityLivingBase orderer) {
+    public OrderFollowNew(ThreePartAI ai, LivingEntity orderer) {
         super(ai, orderer);
         this.followEntity = orderer;
         //this.followId = orderer.entityId;
     }
 
-    public OrderFollowNew(ThreePartAI ai, NBTTagCompound tag) {
+    public OrderFollowNew(ThreePartAI ai, CompoundNBT tag) {
         super(ai, tag);
         this.followEntity = null; //disable follow order after reload
     }
@@ -34,15 +32,11 @@ public class OrderFollowNew extends MercenaryOrderNew {
         return dx * dx + dy * dy + dz * dz;
 
     }
-
-    private AxisAlignedBB getBBAroundEntity(EntityLiving target, float width) {
+/*
+    private AxisAlignedBB getBBAroundEntity(LivingEntity target, float width) {
         return new AxisAlignedBB(target.posX - width / 2, target.posX + width / 2,
                 target.posY - width / 2, target.posY + width / 2,
                 target.posZ - width / 2, target.posZ + width / 2);
-    }
-
-    public static MercenaryOrderFactory getFactory(){
-        return ( (ai,orderer) -> new OrderFollowNew(ai,orderer) );
-    }
+    }*/
 
 }

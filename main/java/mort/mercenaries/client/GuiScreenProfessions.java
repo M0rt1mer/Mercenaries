@@ -1,15 +1,15 @@
 package mort.mercenaries.client;
 
-import mort.mercenaries.Reference;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import org.lwjgl.opengl.GL11;
-
-public class GuiScreenProfessions extends GuiScreen{
+import mort.mercenaries.inventory.ContainerMercenary;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
+/*
+public class GuiScreenProfessions extends ContainerScreen<ContainerMercenary> {
 
 	GUIContainerMercenary previous;
-	GuiButton back;
+	Button back;
 
 	//public static RenderItem renderItem = new RenderItem();
 
@@ -20,11 +20,15 @@ public class GuiScreenProfessions extends GuiScreen{
 	static final int colorEnabled = 0x999966;
 	static final int colorDisabled = 0x474719;
 
-
-	public GuiScreenProfessions(GUIContainerMercenary previous) {
+	public GuiScreenProfessions(ContainerMercenary screenContainer, PlayerInventory inv, ITextComponent titleIn, GUIContainerMercenary previous) {
+		super(screenContainer, inv, titleIn);
 		this.previous = previous;
 	}
 
+	public GuiScreenProfessions(ContainerMercenary screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+		super(screenContainer, inv, titleIn);
+	}
+/*
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -54,14 +58,14 @@ public class GuiScreenProfessions extends GuiScreen{
 				this.drawCreativeTabHoveringText( prof.getName() + "\n" + prof.getDescription(), mouseX - (this.width - this.xSize) / 2, mouseY - (this.height - this.ySize) / 2);
 			
 		}*/
-	}
-
+	//}
+/*
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if( par1GuiButton == back )
 			FMLClientHandler.instance().showGuiScreen( previous );
 	}
-
+*/
 	/*protected void drawProfessionLine( int x, int y, MercenaryProfession prof ){
 		boolean enabled = previous==null || prof.isAvaible( ((ContainerMercenary)previous.inventorySlots).merc );
 		this.mc.getTextureManager().bindTexture( Reference.GUI_PROFLIST );
@@ -74,5 +78,6 @@ public class GuiScreenProfessions extends GuiScreen{
 		
 	}*/
 
-
+/*
 }
+*/

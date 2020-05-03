@@ -8,17 +8,14 @@ import mort.mercenaries.newAI.decider.OrderWorkNew;
 import mort.mercenaries.newAI.plan.AiPlan;
 import mort.mercenaries.newAI.planner.AiPlanner;
 import mort.mercenaries.newAI.worldState.AiWorldState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 
-/**
- * Created by Martin on 17.06.2016.
- */
+
 public class ThreePartAI {
 
-    public static MercenaryOrderNew.MercenaryOrderFactory[] orderTypes = {MercenaryOrderNew.getFactory(), OrderWorkNew.getFactory(), OrderFollowNew.getFactory()};
+    public static MercenaryOrderNew.MercenaryOrderFactory[] orderTypes = {MercenaryOrderNew::new, OrderWorkNew::new, OrderFollowNew::new};
 
     public EntityMercenary merc;
-
 
     //region Order
     public MercenaryOrderNew order = null;
@@ -52,18 +49,14 @@ public class ThreePartAI {
 
     }
 
-
-
-
-    public void changeOrder( int ord, EntityLivingBase orderer ){
+    public void changeOrder( int ord, LivingEntity orderer ){
         if( ord != orderId ){
-            order = orderTypes[ord].instantiate(this,orderer);
+            order = orderTypes[ord].instantiate(this, orderer);
             orderId = ord;
         }
         else{
             order.reissue();
         }
     }
-
 
 }

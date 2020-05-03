@@ -13,10 +13,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- *
- * @author Martin
- */
 public class ProfessionManager {
 
 	public static ProfessionManager instance = new ProfessionManager();

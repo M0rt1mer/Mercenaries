@@ -1,8 +1,8 @@
 package mort.mercenaries.newAI.decider;
 
 import mort.mercenaries.newAI.ThreePartAI;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 
 public class OrderWorkNew extends MercenaryOrderNew {
 
@@ -10,15 +10,15 @@ public class OrderWorkNew extends MercenaryOrderNew {
     //work location
     public double x, y, z;
 
-    public OrderWorkNew(ThreePartAI ai, EntityLivingBase orderer) {
+    public OrderWorkNew(ThreePartAI ai, LivingEntity orderer) {
         super(ai, orderer);
-        this.x = ai.merc.posX;
-        this.y = ai.merc.posY;
-        this.z = ai.merc.posZ;
+        this.x = ai.merc.prevPosX;
+        this.y = ai.merc.prevPosY;
+        this.z = ai.merc.prevPosZ;
         this.time = (byte) getTime();
     }
 
-    public OrderWorkNew(ThreePartAI ai, NBTTagCompound tag) {
+    public OrderWorkNew(ThreePartAI ai, CompoundNBT tag) {
         super(ai, tag );
         this.x = tag.getDouble("WorkX");
         this.y = tag.getDouble("WorkY");
@@ -28,16 +28,16 @@ public class OrderWorkNew extends MercenaryOrderNew {
     }
 
     @Override
-    public void saveToNBTTag(NBTTagCompound tag) {
+    public void saveToNBTTag(CompoundNBT tag) {
         super.saveToNBTTag(tag);
-        tag.setDouble("WorkX", x);
-        tag.setDouble("WorkY", y);
-        tag.setDouble("WorkZ", z);
-        tag.setByte("ShiftTime", time);
+        tag.putDouble("WorkX", x);
+        tag.putDouble("WorkY", y);
+        tag.putDouble("WorkZ", z);
+        tag.putByte("ShiftTime", time);
     }
 
     public int getTime() {
-        return (int) (ai.merc.getEntityWorld().getWorldInfo().getWorldTime() % 20000) / 6667;
+        return (int) (ai.merc.getEntityWorld().getWorldInfo().getDayTime() % 20000) / 6667;
     }
 
     @Override

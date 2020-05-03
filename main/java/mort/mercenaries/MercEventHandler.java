@@ -1,49 +1,48 @@
 package mort.mercenaries;
 
 import mort.mercenaries.common.EntityMercenary;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.NetworkHooks;
 
-/**
- *
- * @author Martin
- */
+//import net.minecraft.entity.monster.EntityZombie;
+
+@Mod.EventBusSubscriber( modid = Reference.modId )
 public class MercEventHandler {
 
 	@SubscribeEvent
-	public void onEntityInteract(EntityInteractSpecific evnt){
-		ItemStack heldItem = evnt.getEntityPlayer().getHeldItem(EnumHand.MAIN_HAND);
-		if( heldItem!= null && heldItem.getItem() == Content.itemMoney ){
-			if( evnt.getTarget() instanceof EntityVillager ){
-				EntityVillager villager = (EntityVillager)evnt.getTarget();
+	public static void onEntityInteract(EntityInteractSpecific evnt){
+		ItemStack heldItem = evnt.getPlayer().getHeldItem(Hand.MAIN_HAND);
+		if( heldItem!= null && heldItem.getItem() == Content.itemMoney.get() ){
+			if( evnt.getTarget() instanceof VillagerEntity){
+				VillagerEntity villager = (VillagerEntity)evnt.getTarget();
 				if( !villager.isChild() ){
 					if(villager.getWorld().isRemote)
 						return;
-					EntityMercenary merc = new EntityMercenary(villager.getWorld());
+					EntityMercenary merc = new EntityMercenary(Content.mercEntityType.get(), villager.getWorld());
 					//merc.guildAllignment = Mercenaries.guildManager.getGuild(evnt.getEntityPlayer()).id;
 					//System.out.println( "Allign: "+merc.guildAllignment + merc.getGuild() );
-					merc.setLocationAndAngles(villager.posX, villager.posY, villager.posZ, villager.rotationYaw, villager.rotationPitch);
-					villager.getWorld().spawnEntity(merc);
-					villager.getWorld().removeEntity( villager );
-					return;
+					Vec3d position = villager.getPositionVec();
+					merc.setLocationAndAngles(position.x, position.y, position.z, villager.rotationYaw, villager.rotationPitch);
+					villager.world.addEntity(merc);
+					NetworkHooks.getEntitySpawningPacket(merc);
+					villager.remove();
+					evnt.setCancellationResult(ActionResultType.CONSUME);
 				}
 			}
 		}
 	}
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public void onSpawn( EntityJoinWorldEvent evnt ){
-		if( evnt.getEntity() instanceof EntityZombie || evnt.getEntity() instanceof EntitySkeleton ){
-			//    ((EntityLiving)evnt.entity).targetTasks.addTask(2, new EntityAINearestAttackableTarget((EntityLiving)evnt.entity, EntityMercenaryOld.class, 16.0f, 0, true)  );
-		}
 
-	}
+	}*/
 
 	/*
 	@SubscribeEvent

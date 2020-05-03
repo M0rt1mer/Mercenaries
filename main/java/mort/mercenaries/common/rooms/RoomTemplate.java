@@ -1,12 +1,13 @@
 package mort.mercenaries.common.rooms;
 
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RoomTemplate extends IForgeRegistryEntry.Impl<RoomTemplate> {
+public class RoomTemplate extends ForgeRegistryEntry<RoomTemplate> {
 	
 	public List<Furnishing> furnishing;
 	

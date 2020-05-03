@@ -2,17 +2,18 @@ package mort.mercenaries.common.rooms;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.text.LanguageMap;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.actors.threadpool.Arrays;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SimpleFurniture implements IFurniture {
 
+	// it's list because of helper functions
 	public List<Block> avaiableBlocks;
 	public String idName;
 	
@@ -27,15 +28,15 @@ public class SimpleFurniture implements IFurniture {
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public String getDescription() {
-		return I18n.translateToLocal("furniture." + idName + ".desc");
+		return LanguageMap.getInstance().translateKey("furniture." + idName + ".desc");
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public String getName() {
-		return  I18n.translateToLocal( "furniture."+idName+".name" );
+		return LanguageMap.getInstance().translateKey( "furniture."+idName+".name" );
 	}
 	
 	

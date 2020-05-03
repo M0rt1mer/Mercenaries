@@ -1,15 +1,13 @@
 package mort.mercenaries.api;
 
-import mort.mercenaries.EntityMercenary;
 import mort.mercenaries.Reference;
-import mort.mercenaries.ai.JobWork;
+import mort.mercenaries.common.EntityMercenary;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Abstract class, parent of all professions.
@@ -52,54 +50,31 @@ public class MercenaryProfession {
     public boolean matchesItem( ItemStack stk ){
 		return true;
     }
-    
-    //---------------------------------------  AI
-    /**
-     * Used to determine whether doMove or performAction should be called.
-     * This prototype can be used to test range to lastAction, if specified
-     * @param job
-     * @return true if in range, false if outside range or no action specified
-     */
-    public boolean hasToMove( JobWork job ){
-		/*EntityMercenary merc = job.order.ai.merc;
-		if( job.lastAction != null )
-		    return (Math.pow(job.lastAction.getX()-merc.posX,2) + Math.pow(job.lastAction.getY()-merc.posY,2) + Math.pow(job.lastAction.getZ()-merc.posZ,2) ) > Math.pow( getRange(job), 2);
-		else
-		    return false;*/
-        return false;
-    }
-    
-    public void doMove( JobWork job ){}
-    
-    public void performAction( JobWork job ){}
-    
-    /**
-     * basic working range
-     */
-    public double getRange( JobWork job ){ return 1; }
-    
+
     //---------------------------------------  
-    
-    @SideOnly( Side.CLIENT )
+/*
+    @OnlyIn(Dist.CLIENT)
     public String getName(){
     	return I18n.translateToLocal( "professions.name." + innerName );
     }
-    @SideOnly( Side.CLIENT )
+
+    @OnlyIn(Dist.CLIENT)
     public String getDescription(){
     	return I18n.translateToLocal( "professions.desc." + innerName );
     }
-    @SideOnly( Side.CLIENT )
+
+    @OnlyIn(Dist.CLIENT)
     public String getRequirement(){
     	return I18n.translateToLocal( "professions.req." + innerName );
 
-    }
+    }*/
     
-    @SideOnly( Side.CLIENT )
-    public void registerIcon( TextureMap map ){
-    	icn = map.registerSprite( new ResourceLocation( Reference.modId, "profession/" + this.registryName) );
+    @OnlyIn(Dist.CLIENT)
+    public void registerIcon( AtlasTexture map ){
+    	icn = map.getSprite( new ResourceLocation( Reference.modId, "profession/" + this.registryName) );
     }
 
-    @SideOnly( Side.CLIENT )
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation getResourceLocation(){
         return new ResourceLocation( Reference.modId,"textures/profession/" + this.registryName+".png");
     }

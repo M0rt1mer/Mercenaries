@@ -5,13 +5,15 @@
 package mort.mercenaries.inventory;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
+
+import java.util.Set;
 
 /**
  *
@@ -22,11 +24,6 @@ public class InventoryMercenary implements IInventory{
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return this.mercenary.isDead ? false : player.getDistanceSqToEntity(this.mercenary) <= 64.0D;
     }
 
     /**
@@ -70,7 +67,7 @@ public class InventoryMercenary implements IInventory{
             }
             else
             {
-                var4 = inv.get(slot).splitStack(slot);
+                var4 = inv.get(slot).split(slot);
 
                 if (inv.get(slot).getCount() == 0)
                 {
@@ -117,16 +114,16 @@ public class InventoryMercenary implements IInventory{
     }
 
 
-    public void readFromNBT(NBTTagList par1NBTTagList)
+    public void readFromNBT(ListNBT par1NBTTagList)
     {
         mainInventory.clear();
         armorInventory.clear();
 
-        for (int var2 = 0; var2 < par1NBTTagList.tagCount(); ++var2)
+        for (int var2 = 0; var2 < par1NBTTagList.size(); ++var2)
         {
-            NBTTagCompound var3 = (NBTTagCompound)par1NBTTagList.getCompoundTagAt(var2);
+            CompoundNBT var3 = par1NBTTagList.getCompound(var2);
             int var4 = var3.getByte("Slot") & 255;
-            ItemStack var5 = new ItemStack(var3);
+            ItemStack var5 = ItemStack.read(var3);
 
             if (var5 != null)
             {
@@ -143,19 +140,20 @@ public class InventoryMercenary implements IInventory{
         }
     }
     
-    public NBTTagList writeToNBT(NBTTagList par1NBTTagList)
+    public ListNBT writeToNBT()
     {
+        ListNBT list = new ListNBT();
         int var2;
-        NBTTagCompound var3;
+        CompoundNBT currentCompound;
 
         for (var2 = 0; var2 < this.mainInventory.size(); ++var2)
         {
             if (this.mainInventory.get(var2).isEmpty() )
             {
-                var3 = new NBTTagCompound();
-                var3.setByte("Slot", (byte)var2);
-                this.mainInventory.get(var2).writeToNBT(var3);
-                par1NBTTagList.appendTag(var3);
+                currentCompound = new CompoundNBT();
+                currentCompound.putByte("Slot", (byte)var2);
+                mainInventory.get(var2).write(currentCompound);
+                list.add(currentCompound);
             }
         }
 
@@ -163,14 +161,14 @@ public class InventoryMercenary implements IInventory{
         {
             if ( this.armorInventory.get(var2).isEmpty() )
             {
-                var3 = new NBTTagCompound();
-                var3.setByte("Slot", (byte)(var2 + 100));
-                this.armorInventory.get(var2).writeToNBT(var3);
-                par1NBTTagList.appendTag(var3);
+                currentCompound = new CompoundNBT();
+                currentCompound.putByte("Slot", (byte)(var2 + 100));
+                armorInventory.get(var2).write(currentCompound);
+                list.add(currentCompound);
             }
         }
 
-        return par1NBTTagList;
+        return list;
     }
 
     @Override
@@ -185,48 +183,33 @@ public class InventoryMercenary implements IInventory{
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(PlayerEntity player) {
 
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(PlayerEntity player) {
 
     }
 
     @Override
-    public int getField(int id) {
+    public boolean isUsableByPlayer(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public int count(Item itemIn) {
         return 0;
     }
 
     @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
+    public boolean hasAny(Set<Item> set) {
+        return false;
     }
 
     @Override
     public void clear() {
 
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return null;
     }
 
     @Override

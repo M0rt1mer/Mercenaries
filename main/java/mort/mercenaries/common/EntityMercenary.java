@@ -1,29 +1,37 @@
 package mort.mercenaries.common;
 
 import mort.mercenaries.Content;
-import mort.mercenaries.Mercenaries;
+import mort.mercenaries.inventory.ContainerMercenary;
 import mort.mercenaries.inventory.InventoryMercenary;
 import mort.mercenaries.newAI.ThreePartAI;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+import javax.annotation.Nullable;
 import java.util.Collections;
 
-/**
- * Created by Martin on 15.06.2016.
- */
-public class EntityMercenary extends EntityLivingBase {
+
+public class EntityMercenary extends LivingEntity implements INamedContainerProvider {
 
     private static final DataParameter<String> MERC_NAME = EntityDataManager.<String>createKey(EntityMercenary.class, DataSerializers.STRING);
     private static final DataParameter<Integer> MERC_PROFESSION = EntityDataManager.<Integer>createKey(EntityMercenary.class, DataSerializers.VARINT);
@@ -37,48 +45,33 @@ public class EntityMercenary extends EntityLivingBase {
 
     public ThreePartAI ai;
 
-
-
-    public EntityMercenary(World worldIn) {
-        super(worldIn);
+    public EntityMercenary(EntityType<? extends LivingEntity> type, World worldIn) {
+        super(type, worldIn);
         inventory = new InventoryMercenary( this );
         this.moveForward = 0.25f;
-        this.ai = new ThreePartAI(this);
-    }
+        if( !worldIn.isRemote )
+            this.ai = new ThreePartAI(this);
+        this.mercname = Content.nameRegistry.randomName();
 
+        System.out.println(this.mercname + getDataManager().get(MERC_NAME));
+    }
 
     @Override
-    public void applyEntityAttributes(){
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    protected void registerData() {
+        super.registerData();
+        this.getDataManager().register( MERC_NAME, mercname );
+        this.getDataManager().register( MERC_PROFESSION, 0 );
     }
-    
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
+    }
+
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
         return Collections.emptyList();
-    }
-
-    @Override
-    public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
-
-    }
-
-    @Override
-    public EnumHandSide getPrimaryHand() {
-        return EnumHandSide.RIGHT;
-    }
-
-    public void entityInit() {
-        super.entityInit();
-        this.mercname = Content.nameRegistry.randomName();
-        this.getDataManager().register( MERC_NAME, mercname );
-        this.getDataManager().register( MERC_PROFESSION, 0 );
-        System.out.println(this.mercname + getDataManager().get(MERC_NAME));
     }
 
     public void professionUpdate(){
@@ -90,39 +83,73 @@ public class EntityMercenary extends EntityLivingBase {
     }
 
     @Override
-    public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        player.openGui(Mercenaries.merc, 1, getEntityWorld(), getEntityId(), 0, 0);
+    public boolean processInitialInteract(PlayerEntity player, Hand hand) {
+        if(getEntityWorld().isRemote)
+            return false;
+        if(player instanceof ServerPlayerEntity)
+            NetworkHooks.openGui((ServerPlayerEntity)player, this, (buffer) -> buffer.writeInt(this.getEntityId()) );
         return true;
     }
 
-    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
-        super.readEntityFromNBT(par1NBTTagCompound);
-        inventory.readFromNBT( par1NBTTagCompound.getTagList("Inventory", 10) );
-        this.mercname = par1NBTTagCompound.getString("Name");
-        this.getDataManager().set(MERC_NAME, this.mercname);
-        //this.ai = new MercenaryAI(this, par1NBTTagCompound.getCompoundTag("AI") );
-        if(par1NBTTagCompound.hasKey("bedX")){
-            int bedX = par1NBTTagCompound.getInteger("bedX");
-            int bedY = par1NBTTagCompound.getInteger("bedY");
-            int bedZ = par1NBTTagCompound.getInteger("bedZ");
-            //bedPos = new BlockPos(bedX,bedY,bedZ);
-        }
-        //professionUpdate();
-        //reportToGuild(true);
+    @Override
+    public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
-        super.writeEntityToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setTag("Inventory", inventory.writeToNBT(new NBTTagList()));
-        //par1NBTTagCompound.setInteger("Guild", guildAllignment);
-        par1NBTTagCompound.setString("Name", this.mercname);
-        //par1NBTTagCompound.setTag( "AI", this.ai.saveToNBTTag() );
-        /*if(bedPos != null){
-            par1NBTTagCompound.setInteger("bedX", bedPos.getX());
-            par1NBTTagCompound.setInteger("bedY", bedPos.getY());
-            par1NBTTagCompound.setInteger("bedZ", bedPos.getZ());
-        }*/
+    public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
+
     }
+
+    @Override
+    public HandSide getPrimaryHand() {
+        return HandSide.RIGHT;
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity p_createMenu_3_) {
+        return new ContainerMercenary( id, playerInventory, this );
+    }
+
+
+    @Override
+    public ITextComponent getDisplayName() {
+        return new StringTextComponent(mercname);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        inventory.readFromNBT( compound.getList("Inventory", 10) );
+        this.mercname = compound.getString("Name");
+        this.getDataManager().set(MERC_NAME, this.mercname);
+        //this.ai = new MercenaryAI(this, par1NBTTagCompound.getCompoundTag("AI") );
+        if(compound.hasUniqueId("bedX")){
+            int bedX = compound.getInt("bedX");
+            int bedY = compound.getInt("bedY");
+            int bedZ = compound.getInt("bedZ");
+        }
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.put("Inventory", inventory.writeToNBT());
+        compound.putString("Name", mercname);
+    }
+
+    @Override
+    public void tick() {
+        if( !getEntityWorld().isRemote )
+            ai.update();
+    }
+
+    //used in rendering
+    @OnlyIn(Dist.CLIENT)
+    public String getActiveOrderName(){
+        return I18n.format("order." + ( ( getDataManager().get( MERC_FLAGS ) >> 1) & 3 ) +".name" );
+    }
+
 
 }

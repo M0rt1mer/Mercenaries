@@ -2,8 +2,8 @@ package mort.mercenaries.newAI.decider;
 
 import mort.mercenaries.newAI.ThreePartAI;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class MercenaryOrderNew {
 
     public static final int searchCooldown = 40;
 
-    public MercenaryOrderNew(ThreePartAI ai, EntityLivingBase orderer) {
+    public MercenaryOrderNew(ThreePartAI ai, LivingEntity orderer) {
     }
 
     /**
@@ -35,13 +35,12 @@ public class MercenaryOrderNew {
         return false;
     }
 
-
     //region Save/Load
-    public MercenaryOrderNew(ThreePartAI ai, NBTTagCompound tag) {
-        this(ai, (EntityLivingBase) null);
+    public MercenaryOrderNew(ThreePartAI ai, CompoundNBT tag) {
+        this(ai, (LivingEntity) null);
     }
 
-    public void saveToNBTTag(NBTTagCompound tag) {
+    public void saveToNBTTag(CompoundNBT tag) {
     }
     //endregion
 
@@ -51,7 +50,7 @@ public class MercenaryOrderNew {
 
     //region Factory
     public interface MercenaryOrderFactory {
-        MercenaryOrderNew instantiate(ThreePartAI ai, EntityLivingBase orderer);
+        MercenaryOrderNew instantiate(ThreePartAI ai, LivingEntity orderer);
     }
 
     public static MercenaryOrderFactory getFactory() {

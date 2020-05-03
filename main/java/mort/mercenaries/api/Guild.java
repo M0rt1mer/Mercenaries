@@ -1,21 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mort.mercenaries.api;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-/**
- *
- * @author Martin
- */
-public final class Guild {
+/*public final class Guild {
 
 	public String ownerName;
 	public EntityPlayer owner;
@@ -80,7 +65,7 @@ public final class Guild {
 	 * Returns this guild relationship rating towards given guild.
 	 * @param gld
 	 * @return rating, on the scale from -1 (sworn enemies) to +1 (same guild). Less than 0 is considered enemy and will attack on sight
-	 */
+	 *//*
 	public float getRelation( Guild gld ){
 		if(this==gld)
 			return 1;
@@ -102,3 +87,4 @@ public final class Guild {
 	}
 
 }
+*/

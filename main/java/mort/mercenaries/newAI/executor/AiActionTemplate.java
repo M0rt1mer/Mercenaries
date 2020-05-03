@@ -1,12 +1,13 @@
 package mort.mercenaries.newAI.executor;
 
 import mort.mercenaries.newAI.worldState.AiWorldState;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * Created by Martin on 19.06.2016.
  */
-public abstract class AiActionTemplate extends IForgeRegistryEntry.Impl<AiActionTemplate> {
+public abstract class AiActionTemplate extends ForgeRegistryEntry<AiActionTemplate> {
 
     abstract public boolean checkAvailable(AiWorldState difference);
 

@@ -4,19 +4,16 @@
  */
 package mort.mercenaries.inventory;
 
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
-/**
- * @author Martin Labut
- */
 class SlotArmor extends Slot
 {
-    final EntityEquipmentSlot armorType;
+    final EquipmentSlotType armorType;
 
-    SlotArmor(IInventory par2IInventory, int par3, int par4, int par5, EntityEquipmentSlot armorType) {
+    SlotArmor(IInventory par2IInventory, int par3, int par4, int par5, EquipmentSlotType armorType) {
         super(par2IInventory, par3, par4, par5);
         this.armorType = armorType;
     }
@@ -29,7 +26,7 @@ class SlotArmor extends Slot
     @Override
     public boolean isItemValid(ItemStack par1ItemStack){
     	if (par1ItemStack == null) return false;
-        return par1ItemStack.getItem().isValidArmor(par1ItemStack, armorType, null);
+    	return par1ItemStack.getItem().canEquip( par1ItemStack, armorType, null );
     }
     
 }

@@ -1,21 +1,9 @@
 package mort.mercenaries.api;
 
-import mort.mercenaries.EntityMercenaryOld;
-import mort.mercenaries.Guild;
-import mort.mercenaries.Mercenaries;
-import mort.mercenaries.api.crime.Crime;
-import mort.mercenaries.api.crime.CrimeAuthority;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.math.AxisAlignedBB;
-
-import java.util.HashMap;
-import java.util.List;
-
 /**
  * A "crime" is a player action, that should be met with violent reaction from neaby guards.
  * CrimeManager handles all manages all crime-reporting professions, and handles crime reports to apropriate authorities
- * @author Martin Labuť <martin.labut@volny.cz>
- */
+ *//*
 public class CrimeManager {
 
     public static CrimeManager instance = new CrimeManager();
@@ -23,7 +11,7 @@ public class CrimeManager {
     /**
      * Selects one CrimeAuthority per guild in range of offender and notifies them of the crime
      * @param crm 
-     */
+     *//*
     public void reportCrime( Crime crm, Guild victim ){
 	//offender has no guild
 	if( Mercenaries.guildManager.getGuild(crm.offender) == null )
@@ -56,3 +44,4 @@ public class CrimeManager {
    
     
 }
+*/

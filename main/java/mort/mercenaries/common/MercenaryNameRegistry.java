@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-/**
- *
- * @author Martin
- */
+
 public class MercenaryNameRegistry {
     
     public ArrayList<String> firstNames;
