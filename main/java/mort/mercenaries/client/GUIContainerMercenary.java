@@ -7,54 +7,47 @@ package mort.mercenaries.client;
 import mort.mercenaries.Reference;
 import mort.mercenaries.common.EntityMercenary;
 import mort.mercenaries.inventory.ContainerMercenary;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
-/**
- *
- * @author Martin
- */
-public class GUIContainerMercenary extends GuiContainer{
+public class GUIContainerMercenary extends ContainerScreen<ContainerMercenary> {
 
-	GuiButton profButton;
-	GuiButton setHomeButton;
+	Button profButton;
+	Button setHomeButton;
 	
-	public GUIContainerMercenary(EntityMercenary merc, EntityPlayer plr ) {
-		super( new ContainerMercenary( merc, plr ) );
-		this.xSize = 176;
-		this.ySize = 222;
-		this.allowUserInput = true;
+	public GUIContainerMercenary(ContainerMercenary screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+		super(screenContainer, inv, titleIn);
 	}
 
 	@Override
-	public void initGui() {
-		super.initGui();
+	protected void init() {
+		super.init();
 		int minX = (this.width - this.xSize) / 2;
 		int minY = (this.height - this.ySize) / 2;
-		profButton = new GuiButton( 0, minX + 44, minY + 108, 16, 16, "" );
-		setHomeButton = new GuiButton( 1, minY + 150, minY+150, 48, 16, "Set Home"  );
-		this.buttonList.add(profButton);
-		this.buttonList.add(setHomeButton);
+		profButton = new Button( 0, minX + 44, minY + 108, 16, "", (b) -> {} );
+		setHomeButton = new Button( 1, minY + 150, minY+150, 48, "Set Home", (b) -> {}  );
+		addButton(profButton);
+		addButton(setHomeButton);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.renderEngine.bindTexture( Reference.GUI_MERC_INV );
+		this.minecraft.getTextureManager().bindTexture( Reference.GUI_MERC_INV );
 		int var5 = (this.width - this.xSize) / 2;
 		int var6 = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect( var5, var6, 0, 0, this.xSize, this.ySize );
+		this.blit( var5, var6, 0, 0, this.xSize, this.ySize );
 		//this.drawTexturedModalRect(var5, var6 + this.inventoryRows * 18 + 17, 0, 126, this.xSize, 96);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		EntityMercenary merc = ((ContainerMercenary)this.inventorySlots).merc;
+		EntityMercenary merc = container.merc;
 		if( merc.mercname != null )
-			this.fontRenderer.drawString(merc.mercname, 8, 8, 4210752);
+			this.font.drawString(merc.mercname, 8, 8, 4210752);
 		/*MercenaryProfession prof = merc.prof;
 		if( prof == null ){
 			prof = ProfessionManager.instance.noProf;
@@ -70,6 +63,8 @@ public class GUIContainerMercenary extends GuiContainer{
 			*/
 	}
 
+	
+	   /*
 	@Override
 	protected void actionPerformed(GuiButton par1GuiButton) {
 		if( par1GuiButton == profButton )
@@ -78,7 +73,7 @@ public class GUIContainerMercenary extends GuiContainer{
 			
 		}
 			
-	}
+	}      */
 
 
 
