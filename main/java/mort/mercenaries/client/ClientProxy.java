@@ -21,7 +21,7 @@ public class ClientProxy extends CommonProxy{
 		//registerSingleItemRenderer(Content.itemMoney);
         //RenderingRegistry.registerEntityRenderingHandler(EntityMercenary.class, RenderMercenary::new );
 		RenderingRegistry.registerEntityRenderingHandler(Content.mercEntityType.get(), RenderMercenary::new );
-		ScreenManager.registerFactory(Content.mercContainerType, GUIContainerMercenary::new);
+		ScreenManager.registerFactory(Content.mercContainerType.get(), GUIContainerMercenary::new);
 	}
 
 }

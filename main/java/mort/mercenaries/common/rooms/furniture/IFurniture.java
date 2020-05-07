@@ -1,4 +1,4 @@
-package mort.mercenaries.common.rooms;
+package mort.mercenaries.common.rooms.furniture;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

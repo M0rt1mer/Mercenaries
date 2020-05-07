@@ -24,7 +24,7 @@ public class ContainerMercenary extends Container {
 	}
 
 	public ContainerMercenary(int id, PlayerInventory playerInventoryIn, EntityMercenary merc) {
-		super(Content.mercContainerType, id);
+		super(Content.mercContainerType.get(), id);
 		this.merc = merc;
 		this.merc = merc;
 

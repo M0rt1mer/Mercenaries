@@ -23,3 +23,5 @@ work.time.0=morning
 work.time.1=afternoon
 work.time.2=night
 item.goldCoin.name=Gold coin
+
+room.house.name=House
